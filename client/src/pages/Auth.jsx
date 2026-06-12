@@ -1,11 +1,29 @@
 import React from 'react'
+import axios from "axios"
 import { SiProbot } from "react-icons/si";
 import { GiCometSpark } from "react-icons/gi";
 import { motion } from "motion/react";
 import { FcGoogle } from "react-icons/fc";
+import { auth, provider } from '../utils/firebase';
+import { signInWithPopup } from "firebase/auth";
 
-
+const ServerUrl = "http://localhost:8000";
 function Auth() {
+
+    const handleGoogleAuth = async () =>{
+        try {
+            const response = await signInWithPopup(auth, provider)
+            let User = response.user
+            let name = User.displayName
+            let email = User.email
+            const result = await axios.post(ServerUrl +"/api/auth/google" ,
+                {name,email},{withCredentials:true})
+            console.log(result.data)            
+        } catch (error) {
+            console.log(error)
+            
+        }
+    }
   return (
     <div className='w-full min-h-screen bg-[#f3f3f3] flex items-center justify-center px-6 py-20'>
        <motion.div
@@ -19,7 +37,7 @@ function Auth() {
             </div>
             <h2 className= 'font-semibold text-lg'>Interview-prep-ai</h2>
         </div>
-        <h1 className='text-2xl md:text-3xl font-semibold text-center leading-sung mb-4'>
+        <h1 className='text-2xl md:text-3xl font-semibold text-center leading-snug mb-4'>
             Continue with
             <span className='bg-green-100 text-green-600 px-3 py-1 rounded-full inline-flex items-center gap-2'>
                <GiCometSpark size={16}/>
@@ -34,9 +52,10 @@ function Auth() {
         </p>
 
         <motion.button
+        onClick={handleGoogleAuth}
         whileHover={{opacity:0.8,scale:1.03}}
         whileTap={{opacity:1, scale:0.98}}
-        className='w-full flex item-center justify-center gap-3 bg-black  py-3 text-white rounded-full shadow-md'>
+        className='w-full flex items-center justify-center gap-3 bg-black  py-3 text-white rounded-full shadow-md'>
             <FcGoogle size={20}/>
             Continue with Google
 

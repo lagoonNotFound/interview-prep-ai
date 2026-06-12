@@ -1,18 +1,31 @@
-import express from "express"
-import dotenv from"dotenv"
-dotenv.config()
-import connectDb from "./config/connectDb.js"
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import userRouter from "./routes/user.route.js";
 
+import connectDb from "./config/connectDb.js";
+import authRouter from "./routes/auth.route.js";
 
-const app = express()
+dotenv.config();
 
-const PORT = process.env.PORT || 6000
+const app = express();
 
-app.get("/" , (req,res)=>{
-    return res.json({message:"Server Started"})
-})
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}));
 
-app.listen(PORT , ()=>{
-    console.log(`Server running on port ${PORT}`)
-    connectDb()
-})
+app.use(express.json());
+app.use(cookieParser());
+
+app.use("/api/user",userRouter)
+
+app.use("/api/auth", authRouter);
+
+const PORT = process.env.PORT || 6000;
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    connectDb();
+});
