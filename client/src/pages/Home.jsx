@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { motion } from "motion/react";
 import { HiSparkles } from "react-icons/hi";
 import { useNavigate } from 'react-router-dom';
+// import {motion} from "motion/react";
 
 import AuthModel from '../components/AuthModel';
 import evalImg from "../assets/ai-ans.png";
